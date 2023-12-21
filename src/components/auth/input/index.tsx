@@ -11,7 +11,7 @@ export function Input({ label, type, onChange }: InputProps) {
       <input
         type={type}
         className="bg-white h-12 border border-gray-300 text-gray-700 text-sm rounded-lg  block w-full p-2.5"
-        placeholder={`Enter ${label}`}
+        placeholder={`${label}`}
         onChange={(e) => onChange(e.target.value)}
       />
     </div>
