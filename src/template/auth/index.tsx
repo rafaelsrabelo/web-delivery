@@ -1,11 +1,11 @@
 import { ReactNode } from 'react';
 
-interface TemplateAuthProps {
+interface LayoutAuthProps {
   title: string;
   descritpion: string;
   children?: ReactNode; // Para permitir qualquer conteúdo filho
 }
-export function TemplateAuth({ title, descritpion, children }: TemplateAuthProps) {
+export function LayoutAuth({ title, descritpion, children }: LayoutAuthProps) {
   return (
     <div className="relative w-full h-screen bg-gray-300">
       <div className="flex justify-center items-center h-full">

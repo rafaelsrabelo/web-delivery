@@ -1,9 +1,9 @@
-import { TemplateAuth } from '../../template/auth';
+import { LayoutAuth } from '../../template/auth';
 
 export function SignUp() {
   return (
-    <TemplateAuth title="Cadastrar" descritpion="Cadastre login na sua conta">
+    <LayoutAuth title="Cadastrar" descritpion="Cadastre login na sua conta">
       {/* INPUTS */}
-    </TemplateAuth>
+    </LayoutAuth>
   );
 }
