@@ -1,3 +1,9 @@
+import { TemplateAuth } from '../../template/auth';
+
 export function SignIn() {
-  return <h1 className="text-3xl font-bold underline">Entrar</h1>;
+  return (
+    <TemplateAuth title="Entrar" descritpion="Faça login na sua conta">
+      {/* INPUTS */}
+    </TemplateAuth>
+  );
 }

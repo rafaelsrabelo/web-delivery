@@ -1,3 +1,9 @@
+import { TemplateAuth } from '../../template/auth';
+
 export function SignUp() {
-  return <h1 className="text-3xl font-bold underline">Cadastrar</h1>;
+  return (
+    <TemplateAuth title="Cadastrar" descritpion="Cadastre login na sua conta">
+      {/* INPUTS */}
+    </TemplateAuth>
+  );
 }
