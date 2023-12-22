@@ -7,7 +7,7 @@ interface LayoutAuthProps {
 }
 export function LayoutAuth({ title, descritpion, children }: LayoutAuthProps) {
   return (
-    <div className="relative w-full h-screen bg-blue-500">
+    <div className="relative w-full h-screen bg-white">
       <div className="flex justify-center items-center h-full">
         <form className="max-w-[400px] w-full  mx-auto bg-white p-8 rounded-md">
           <div className="text-center">
