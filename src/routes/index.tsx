@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
-import { SignIn } from '../pages/signin';
-import { SignUp } from '../pages/signup';
-import { Orders } from '../pages/orders';
+import { Orders } from '../pages/Orders';
+import { SignIn } from '../pages/SignIn';
+import { SignUp } from '../pages/SignUp';
 
 export function Router() {
   return (

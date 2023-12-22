@@ -1,6 +1,6 @@
 import { Button } from '../../components/auth/button';
 import { Input } from '../../components/auth/input';
-import { LayoutAuth } from '../../template/auth';
+import { LayoutAuth } from '../../template/Auth';
 import { Link } from 'react-router-dom';
 
 export function SignUp() {
