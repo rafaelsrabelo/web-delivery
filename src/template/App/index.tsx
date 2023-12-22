@@ -9,7 +9,7 @@ export function LayoutApp({ children }: LayoutAppProps) {
     <div className="">
       <div className="grid min-h-screen grid-cols-app">
         <SideBar />
-        <main className="px-4 pb-12 pt-8">{children}</main>
+        <main className="px-4 pb-12 pt-24 lg:col-start-2 lg:px-8 lg:pt-8">{children}</main>
       </div>
     </div>
   );
