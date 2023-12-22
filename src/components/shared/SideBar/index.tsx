@@ -6,7 +6,7 @@ import { Profile } from '../Profile';
 
 export function SideBar() {
   return (
-    <aside className="flex flex-col gap-6 border-r border-zinc-200 px-5 py-8">
+    <aside className="fixed left-0 top-0 right-0 bottom-0 flex flex-col border-b gap-6 border-r border-zinc-200 p-4 bg-white lg:right-auto lg:w-80 lg:relative lg:px-5 lg:border-r">
       <Logo />
 
       <div className="flex w-full items-center gap-2 mx-1 rounded-lg border border-zinc-300 px-3 py-2 shadow-sm">
