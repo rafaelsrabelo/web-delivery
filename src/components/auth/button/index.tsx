@@ -1,5 +1,3 @@
-// components/auth/Button.tsx
-
 interface ButtonProps {
   onClick: () => void;
   label: string;
