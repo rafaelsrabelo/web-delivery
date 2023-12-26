@@ -5,7 +5,7 @@ export const loginUser=createAsyncThunk(
     'user/loginUser',
     async (userCredentials) => {
         const request = await api.post('/auth/signin', userCredentials);
-        const response = await request.data.data;
+        const response = await request.data;
         localStorage.setItem('user', JSON.stringify(response));
         return response;
     }
