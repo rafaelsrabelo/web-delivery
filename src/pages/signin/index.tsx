@@ -59,7 +59,7 @@ export function SignIn() {
         >
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
-        {error && (<div className='mt-2 text-red-700' role='alert'>{error}</div>)}
+        {error && (<div className="mt-2 text-red-700" role='alert'>{error}</div>)}
       </form>
       <span className="mt-4 block text-sm text-gray-600">
         Não possui uma conta?{' '}
