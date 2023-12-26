@@ -12,6 +12,7 @@ export function SignUp() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [error, setError] = useState('');
+      
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,8 +21,7 @@ export function SignUp() {
       return;
     }
     try {
-      const response = await api.post('/auth/signup', { name, email, password });
-      console.log('Resposta da API:', response);
+      await api.post('/auth/signup', { name, email, password });
 
       setName('');
       setEmail('');
@@ -30,7 +30,6 @@ export function SignUp() {
       setError('');
       toast.success('Conta criada');
     } catch (error) {
-      console.error('Erro ao cadastrar:', error.message);
       setError('Erro ao cadastrar. Verifique suas informações e tente novamente.');
     }
   };
