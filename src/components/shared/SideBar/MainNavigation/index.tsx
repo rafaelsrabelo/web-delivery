@@ -7,7 +7,7 @@ export function MainNavigation() {
       <nav className="space-y-0.5">
         <NavItem route="/" title="Início" icon={Home} />
         <NavItem route="/orders" title="Pedidos" icon={ListOrdered} />
-        <NavItem route="/profile" title="Perfil" icon={UserRound} />
+        {/* <NavItem route="/profile" title="Perfil" icon={UserRound} /> */}
       </nav>
     </aside>
   );

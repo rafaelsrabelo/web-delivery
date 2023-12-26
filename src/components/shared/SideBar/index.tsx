@@ -26,7 +26,7 @@ export function SideBar() {
         <div className="flex w-full items-center gap-2 mx-1 rounded-lg border border-zinc-300 px-3 py-2 shadow-sm">
           <Search className="h-5 w-5 text-zinc-500" />
           <input
-            className="flex-1 border-0 bg-transparent p-0 text-zinc-900 placeholder-zinc-600"
+            className="flex-1 border-0 bg-transparent p-0 text-zinc-900 placeholder-zinc-600 text-sm"
             type="text"
             placeholder="Buscar..."
           />

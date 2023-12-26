@@ -17,7 +17,7 @@ export function NavItem({ title, icon: Icon, route }: NavItemProps) {
       }
     >
       <Icon className="h-5 w-5 text-zinc-500 " />
-      <span className="font-medium text-zinc-700 ">{title}</span>
+      <span className="font-medium text-zinc-700 text-sm">{title}</span>
       <ChevronRight className="ml-auto h-5 w-5 text-zinc-400 " />
     </NavLink>
   );

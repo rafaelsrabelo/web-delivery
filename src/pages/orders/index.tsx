@@ -3,31 +3,101 @@ import { LayoutApp } from '../../template/App';
 import { useEffect } from 'react';
 import { fetchOrders } from '../../features/orderSlice';
 
+const translateStatus = (status) => {
+  const statusMap = {
+    opened: 'Aberto',
+    done: 'Finalizado',
+    canceled: 'Cancelado',
+    progress: 'Andamento',
+  };
+  return statusMap[status] || status;
+};
+
+const getStatusColorClass = (status) => {
+  const colorMap = {
+    opened: 'gray',
+    done: 'green',
+    canceled: 'red',
+    progress: 'blue',
+  };
+
+  const color = colorMap[status] || 'gray'; // Default to gray if status is not in the map
+  return `bg-${color}-100`;
+};
+
+const formatDate = (inputDate) => {
+  const date = new Date(inputDate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  const year = date.getFullYear();
+
+  const formattedDay = String(day).padStart(2, '0');
+  const formattedMonth = String(month).padStart(2, '0');
+
+  return `${formattedDay}/${formattedMonth}/${year}`;
+};
+
 export function Orders() {
   const orderState = useSelector((state) => state.order);
   const dispatch = useDispatch();
+  const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
 
   useEffect(() => {
     dispatch(fetchOrders());
   }, []);
+
   return (
     <LayoutApp>
-      <h1>
-        Delliv - Pedidos
-      </h1>
-      {orderState.loading && <>loading...</>}
+      <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
+      {orderState.loading && <>Loading...</>}
       {!orderState.loading && orderState.error ? (
         <>Error: {orderState.error}</>
       ) : null}
       {!orderState.loading && orderState.orders.length ? (
-        <ul>
-          {orderState.orders.map((order) => (
-            <li key={order.id}>{order.customer}</li>
-          ))}
-        </ul>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 text-center">
+            <thead>
+              <tr>
+                <th className="p-2 border-b text-xs">Cliente</th>
+                <th className="p-2 border-b text-xs">Endereço</th>
+                <th className="p-2 border-b text-xs">Entregador</th>
+                <th className="p-2 border-b text-xs">Pedido em</th>
+                <th className="p-2 border-b text-xs">Status</th>
+                <th className="p-2 border-b text-xs">-</th>
+              </tr>
+            </thead>
+            <tbody>
+              {orderState.orders.map((order) => (
+                <tr key={order.id}>
+                  <td className="p-2 border-b text-xs flex items-center">
+                  <img src={imageProfile} alt="Nome" className="h-6 w-6 rounded-full me-2" />
+                  <p>
+                    {order.customer}
+                  </p>
+                  </td>
+                  <td className="p-2 border-b text-xs text-zinc-500 truncate">{order.address}</td>
+                  <td className="p-2 border-b text-xs">
+                    {order.user?.name || '-'}
+                  </td>
+                  <td className="p-2 border-b text-xs">{formatDate(order.created_at)}</td>
+                  <td className="p-2 border-b text-xs">
+                  <span className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${getStatusColorClass(order.status)}`}>
+                      {translateStatus(order.status)}
+                    </span>
+                  </td>
+                  <td className="p-2 border-b">
+                    <button className="text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600">
+                      Ver detalhes
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       ) : (
         <>No orders available.</>
       )}
     </LayoutApp>
-    );
+  );
 }
