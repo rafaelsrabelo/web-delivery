@@ -1,16 +1,49 @@
+import { useState } from 'react';
 import { Button } from '../../components/auth/button';
 import { Input } from '../../components/auth/input';
 import { LayoutAuth } from '../../template/Auth';
 import { Link } from 'react-router-dom';
+import { api } from '../../services/api';
 
 export function SignUp() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [error, setError] = useState('');
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response = await api.post('/auth/signup', { name, email, password });
+      console.log('Resposta da API:', response);
+
+      setName('');
+      setEmail('');
+      setPassword('');
+      setPasswordConfirm('');
+      setError('');
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error.message);
+      setError('Erro ao cadastrar. Verifique suas informações e tente novamente.');
+    }
+  };
+
   return (
     <LayoutAuth title="Cadastrar" descritpion="Crie sua conta e começe a trabalhar">
-      <form className="mt-8">
-        <Input type="text" label="Nome" onChange={() => {}} />
-        <Input type="password" label="Senha" onChange={() => {}} />
-        <Input type="password" label="Confirmar sua senha" onChange={() => {}} />
-        <Button label="Cadastrar" onClick={() => {}} />
+      <form className="mt-8" onSubmit={handleLogin}>
+        <Input type="text" label="Nome" value={name} onChange={(e) => setName(e.target.value)} />
+        <Input type="email" label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="password" label="Senha" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Input
+          type="password"
+          label="Confirmar sua senha"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+        />
+        {error && <div className="text-red-700 mt-2">{error}</div>}
+        <Button label="Cadastrar" />
       </form>
       <span className="mt-4 block text-sm text-gray-600">
         Já possui uma conta?{' '}

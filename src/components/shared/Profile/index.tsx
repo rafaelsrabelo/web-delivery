@@ -2,7 +2,13 @@ import { LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function getUser() {
+interface User {
+  name: string;
+  email: string;
+  // Adicione outras propriedades conforme necessário
+}
+
+function getUser(): User {
   let user = localStorage.getItem('user');
   if (user) {
     user = JSON.parse(user);
