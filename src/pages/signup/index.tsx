@@ -4,6 +4,7 @@ import { Input } from '../../components/auth/input';
 import { LayoutAuth } from '../../template/Auth';
 import { Link } from 'react-router-dom';
 import { api } from '../../services/api';
+import { toast } from 'react-toastify';
 
 export function SignUp() {
   const [name, setName] = useState('');
@@ -14,7 +15,10 @@ export function SignUp() {
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    if (password !== passwordConfirm) {
+      setError('As senhas não coincidem');
+      return;
+    }
     try {
       const response = await api.post('/auth/signup', { name, email, password });
       console.log('Resposta da API:', response);
@@ -24,6 +28,7 @@ export function SignUp() {
       setPassword('');
       setPasswordConfirm('');
       setError('');
+      toast.success('Conta criada');
     } catch (error) {
       console.error('Erro ao cadastrar:', error.message);
       setError('Erro ao cadastrar. Verifique suas informações e tente novamente.');
