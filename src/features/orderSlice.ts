@@ -5,28 +5,34 @@ const initialState = {
   orders: [],
   status: 'idle',
   error: null,
+  filterStatus: '',
 };
 
-export const fetchOrders = createAsyncThunk('order/fetchOrders', async (_, thunkAPI) => {
-    const user = localStorage.getItem('user');
-    const parsedUser = JSON.parse(user);
+export const fetchOrders = createAsyncThunk('order/fetchOrders', async (status, thunkAPI) => {
+  const user = localStorage.getItem('user');
+  const parsedUser = JSON.parse(user);
+  
+  if (parsedUser && parsedUser.acess_token) {
+    const token = parsedUser.acess_token;
+    const url = status ? `/orders?status=${status}` : '/orders';
+    const response = await api.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     
-    if (parsedUser && parsedUser.acess_token) {
-      const token = parsedUser.acess_token;
-      const response = await api.get('/orders', {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      return response.data.data;
-  }
+    return response.data.data;
+}
 });
 
 const orderSlice = createSlice({
   name: 'order',
   initialState,
-  reducers: {},
+  reducers: {
+    setFilterStatus: (state, action) => {
+      state.filterStatus = action.payload;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchOrders.pending, (state) => {
@@ -43,5 +49,7 @@ const orderSlice = createSlice({
       });
   },
 });
+
+export const { setFilterStatus } = orderSlice.actions;
 
 export default orderSlice.reducer;

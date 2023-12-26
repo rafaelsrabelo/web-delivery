@@ -40,7 +40,7 @@ export function SideBar() {
         </div>
         <div className="flex flex-col gap-4 rounded-lg bg-blue-50 px-4 py-5">
           <div className="space-y-1">
-            <span className="text-sm/5 font-medium leading-5 text-blue-700">Chamas finalizados</span>
+            <span className="text-sm/5 font-medium leading-5 text-blue-700">Pedidos finalizados</span>
             <p className="text-sm/5 leading-5 text-blue-900">Nossa média de chamados é de 80%</p>
           </div>
           <div className="h-2 rounded-full bg-blue-100">

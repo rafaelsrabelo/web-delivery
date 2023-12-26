@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutApp } from '../../template/App';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchOrders } from '../../features/orderSlice';
 
 const translateStatus = (status) => {
@@ -21,7 +21,7 @@ const getStatusColorClass = (status) => {
     progress: 'blue',
   };
 
-  const color = colorMap[status] || 'gray'; // Default to gray if status is not in the map
+  const color = colorMap[status] || 'gray';
   return `bg-${color}-100`;
 };
 
@@ -38,21 +38,37 @@ const formatDate = (inputDate) => {
 };
 
 export function Orders() {
+  const [filterStatus, setFilterStatus] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
   const orderState = useSelector((state) => state.order);
   const dispatch = useDispatch();
-  const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png'
+  const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
 
   useEffect(() => {
-    dispatch(fetchOrders());
-  }, []);
+    console.log('Filter Status:', filterStatus);
+    dispatch(fetchOrders(filterStatus));
+  }, [filterStatus]);
 
   return (
     <LayoutApp>
-      <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
+      <div className="flex items-center">
+        <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
+        <div className="ml-auto">
+          <select
+            className="p-0.5 border rounded-md"
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+          >
+            <option value="">Todos</option>
+            <option value="opened">Aberto</option>
+            <option value="done">Finalizado</option>
+            <option value="canceled">Cancelado</option>
+            <option value="progress">Andamento</option>
+          </select>
+        </div>
+      </div>
       {orderState.loading && <>Loading...</>}
-      {!orderState.loading && orderState.error ? (
-        <>Error: {orderState.error}</>
-      ) : null}
+      {!orderState.loading && orderState.error ? <>Error: {orderState.error}</> : null}
       {!orderState.loading && orderState.orders.length ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 text-center">
@@ -70,18 +86,16 @@ export function Orders() {
               {orderState.orders.map((order) => (
                 <tr key={order.id}>
                   <td className="p-2 border-b text-xs flex items-center">
-                  <img src={imageProfile} alt="Nome" className="h-6 w-6 rounded-full me-2" />
-                  <p>
-                    {order.customer}
-                  </p>
+                    <img src={imageProfile} alt="Nome" className="h-6 w-6 rounded-full me-2" />
+                    <p>{order.customer}</p>
                   </td>
                   <td className="p-2 border-b text-xs text-zinc-500 truncate">{order.address}</td>
-                  <td className="p-2 border-b text-xs">
-                    {order.user?.name || '-'}
-                  </td>
+                  <td className="p-2 border-b text-xs">{order.user?.name || '-'}</td>
                   <td className="p-2 border-b text-xs">{formatDate(order.created_at)}</td>
                   <td className="p-2 border-b text-xs">
-                  <span className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${getStatusColorClass(order.status)}`}>
+                    <span
+                      className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${getStatusColorClass(order.status)}`}
+                    >
                       {translateStatus(order.status)}
                     </span>
                   </td>
