@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
 import { toast } from 'react-toastify';
+import { RefreshCcw } from 'lucide-react';
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -102,13 +103,24 @@ export function Orders() {
     }
   };
 
+  const updateTable = () => {
+    dispatch(fetchOrders(filterStatus));
+  };
+
   return (
     <LayoutApp>
       <div className="flex items-center">
         <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
-        <div className="ml-auto">
+        <div className="flex items-center ml-auto">
+          <button
+            className="ml-2 py-1 px-2 mr-2  bg-blue-500 hover:bg-blue-600 text-white rounded-md flex items-center"
+            onClick={updateTable}
+          >
+            <RefreshCcw size={18} className="mr-1" />
+            Atualizar
+          </button>
           <select
-            className="p-0.5 border rounded-md"
+            className="py-1 px-2 border rounded-md"
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
