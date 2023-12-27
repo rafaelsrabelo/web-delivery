@@ -17,8 +17,8 @@ const translateStatus = (status) => {
 const getStatusColorClass = (status) => {
   const colorMap = {
     opened: 'blue',
-    done: 'blue',
-    canceled: 'blue',
+    done: 'green',
+    canceled: 'red',
     progress: 'blue',
   };
 
