@@ -2,6 +2,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
 import { fetchOrders } from '../../features/orderSlice';
+import { Modal } from '../../components/shared/Modal';
+
+interface OrderProps {
+  id: number;
+  customer: string;
+  address: string;
+  user?: { name: string };
+  created_at: string;
+  status: 'opened' | 'done' | 'canceled' | 'progress';
+}
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -39,15 +49,25 @@ const formatDate = (inputDate) => {
 
 export function Orders() {
   const [filterStatus, setFilterStatus] = useState('');
-  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [open, setOpen] = useState(false);
+
   const orderState = useSelector((state) => state.order);
+
   const dispatch = useDispatch();
+
   const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
 
   useEffect(() => {
     console.log('Filter Status:', filterStatus);
     dispatch(fetchOrders(filterStatus));
   }, [filterStatus]);
+
+  function handleOrder(order: OrderProps) {
+    setSelectedOrderId(order.id);
+    console.log('Order ID:', order.id);
+    console.log('Customer Name:', order.customer);
+  }
 
   return (
     <LayoutApp>
@@ -100,9 +120,20 @@ export function Orders() {
                     </span>
                   </td>
                   <td className="p-2 border-b">
-                    <button className="text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600">
-                      Ver detalhes
+                    <button
+                      className="text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600"
+                      onClick={() => setOpen(true)}
+                    >
+                      Prosseguir
                     </button>
+                    <Modal open={open} onClose={() => setOpen(false)}>
+                      <div className="flex flex-col gap-4"></div>
+                      <h1 className="text-2xl">Título do Modal</h1>
+                      <p>
+                        Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore
+                        ipsum Lore ipsum Lore ipsum
+                      </p>
+                    </Modal>
                   </td>
                 </tr>
               ))}
