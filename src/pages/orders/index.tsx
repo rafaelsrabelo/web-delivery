@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
 import { toast } from 'react-toastify';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCcw, Search } from 'lucide-react';
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -50,6 +50,7 @@ const formatDate = (inputDate) => {
 export function Orders() {
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = useState(false);
   const [modalData, setModalData] = useState({
     title: '',
@@ -64,8 +65,18 @@ export function Orders() {
   const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
 
   useEffect(() => {
-    dispatch(fetchOrders({ status: filterStatus, page: orderState.currentPage }));
-  }, [filterStatus, orderState.currentPage]);
+    dispatch(fetchOrders({ status: filterStatus, searchTerm, page: orderState.currentPage }));
+  }, [filterStatus, searchTerm, orderState.currentPage]);
+
+  useEffect(() => {
+    // Adicione um pequeno atraso para evitar chamadas desnecessárias
+    const delayTimer = setTimeout(() => {
+      dispatch(fetchOrders({ status: filterStatus, page: orderState.currentPage, searchTerm }));
+    }, 300); // Ajuste o tempo conforme necessário (300 ms é um exemplo)
+
+    // Limpe o timer anterior em cada alteração do termo de busca
+    return () => clearTimeout(delayTimer);
+  }, [filterStatus, orderState.currentPage, searchTerm, dispatch]);
 
   const handleOrder = (order) => {
     setSelectedOrderId(order.id);
@@ -73,7 +84,7 @@ export function Orders() {
       title: 'Alterar Status do Pedido',
       description: `Qual é o próximo status para o pedido de ${order.customer}?`,
       orderId: order.id,
-      selectedStatus: '', // Inicialize selectedStatus
+      selectedStatus: '',
     });
     setOpen(true);
   };
@@ -88,7 +99,7 @@ export function Orders() {
 
       setOpen(false);
 
-      dispatch(fetchOrders(filterStatus));
+      dispatch(fetchOrders({ status: filterStatus, searchTerm, page: orderState.currentPage }));
 
       const selectedOrder = orderState.orders.find((order) => order.id === modalData.orderId);
       if (!selectedOrder.user && user) {
@@ -104,18 +115,42 @@ export function Orders() {
     dispatch(fetchOrders({ status: filterStatus, page }));
   };
 
+  const filterOrdersByCustomer = (orders, searchTerm) => {
+    if (!searchTerm) {
+      return orders;
+    }
+
+    const searchTermLowerCase = searchTerm.toLowerCase();
+
+    const filteredOrders = orders.filter((order) => order.customer.toLowerCase().includes(searchTermLowerCase));
+
+    return filteredOrders;
+  };
+
+  const filteredOrders = filterOrdersByCustomer(orderState.orders, searchTerm);
+
   return (
     <LayoutApp>
       <div className="flex items-center">
         <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
         <div className="flex items-center ml-auto">
-          <button
+          {/* <button
             className="ml-2 py-1 px-2 mr-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-md flex items-center"
             onClick={updateTable}
           >
             <RefreshCcw size={14} className="mr-1" />
             Atualizar
-          </button>
+          </button> */}
+          <div className="flex w-full items-center gap-2 mx-1 rounded-lg border border-zinc-300 px-2 py-1 shadow-sm">
+            <Search className="h-4 w-4 text-zinc-500" />
+            <input
+              className="flex-1 border-0 bg-transparent p-0 text-zinc-900 placeholder-zinc-600 text-sm"
+              type="text"
+              placeholder="Buscar por cliente..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
           <select
             className="py-1 px-2 border rounded-md text-sm"
             value={filterStatus}
@@ -131,7 +166,7 @@ export function Orders() {
       </div>
       {orderState.loading && <>Loading...</>}
       {!orderState.loading && orderState.error ? <>Error: {orderState.error}</> : null}
-      {!orderState.loading && orderState.orders.length ? (
+      {!orderState.loading && filteredOrders.length ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 text-center">
             <thead>
@@ -145,7 +180,7 @@ export function Orders() {
               </tr>
             </thead>
             <tbody>
-              {orderState.orders.map((order) => (
+              {filteredOrders.map((order) => (
                 <tr key={order.id}>
                   <td className="p-2 border-b text-xs flex items-center">
                     <img src={imageProfile} alt="Nome" className="h-6 w-6 rounded-full me-2" />
