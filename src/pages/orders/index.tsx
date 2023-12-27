@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
@@ -26,7 +27,6 @@ const getStatusColorClass = (status) => {
 
   const color = colorMap[status] || 'gray';
   const classes = `bg-${color}-100 text-${color}-800`;
-  console.log(`Status: ${status}, Classes: ${classes}`);
   return classes;
 };
 
@@ -43,7 +43,6 @@ const formatDate = (inputDate) => {
   const formattedMonth = String(month).padStart(2, '0');
   const formattedHours = String(hours).padStart(2, '0');
   const formattedMinutes = String(minutes).padStart(2, '0');
-  const formattedSeconds = String(seconds).padStart(2, '0');
 
   return `${formattedDay}/${formattedMonth}/${year} - ${formattedHours}:${formattedMinutes}`;
 };
@@ -65,8 +64,8 @@ export function Orders() {
   const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
 
   useEffect(() => {
-    dispatch(fetchOrders(filterStatus));
-  }, [filterStatus]);
+    dispatch(fetchOrders({ status: filterStatus, page: orderState.currentPage }));
+  }, [filterStatus, orderState.currentPage]);
 
   const handleOrder = (order) => {
     setSelectedOrderId(order.id);
@@ -82,7 +81,6 @@ export function Orders() {
   const handleUpdateStatus = async () => {
     try {
       if (!modalData || !modalData.orderId || !modalData.selectedStatus) {
-        console.error('Selecione um novo status antes de atualizar ou houve um problema com os dados.');
         return;
       }
 
@@ -99,12 +97,11 @@ export function Orders() {
       toast.success('Status atualizado com sucesso');
     } catch (error) {
       console.error('Erro ao atualizar o status:', error.message);
-      // ... (restante do código de tratamento de erro)
     }
   };
 
-  const updateTable = () => {
-    dispatch(fetchOrders(filterStatus));
+  const updateTable = (page) => {
+    dispatch(fetchOrders({ status: filterStatus, page }));
   };
 
   return (
@@ -200,6 +197,23 @@ export function Orders() {
               ))}
             </tbody>
           </table>
+          <div className="flex justify-between items-center mt-4">
+            <div className="flex space-x-2">
+              {Array.from({ length: orderState.totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => updateTable(index + 1)}
+                  className={`flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white ${
+                    orderState.currentPage === index + 1
+                      ? 'text-blue-600 border-blue-600 bg-blue-50 hover:bg-blue-100 hover:text-blue-700'
+                      : ''
+                  }`}
+                >
+                  {index + 1}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         <>Não há pedidos com esse status</>

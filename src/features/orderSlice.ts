@@ -6,22 +6,27 @@ const initialState = {
   status: 'idle',
   error: null,
   filterStatus: '',
+  currentPage: 1,
+  totalPages: null,
 };
 
-export const fetchOrders = createAsyncThunk('order/fetchOrders', async (status, thunkAPI) => {
+export const fetchOrders = createAsyncThunk('order/fetchOrders', async ({ status, page }, thunkAPI) => {
   const user = localStorage.getItem('user');
   const parsedUser = JSON.parse(user);
 
   if (parsedUser && parsedUser.acess_token) {
     const token = parsedUser.acess_token;
-    const url = status ? `/orders?status=${status}` : '/orders';
+    const url = status ? `/orders?status=${status}&page=${page}` : `/orders?page=${page}`;
     const response = await api.get(url, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
 
-    return response.data.data;
+    return {
+      data: response.data.data,
+      meta: response.data.meta,
+    };
   }
 });
 
@@ -62,7 +67,10 @@ const orderSlice = createSlice({
       })
       .addCase(fetchOrders.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.orders = action.payload;
+        state.orders = action.payload.data;
+        // Atualize o campos de paginação no estado
+        state.currentPage = action.payload.meta.page;
+        state.totalPages = action.payload.meta.totalPages;
       })
       .addCase(fetchOrders.rejected, (state, action) => {
         state.status = 'failed';
@@ -77,7 +85,7 @@ const orderSlice = createSlice({
         // Atualize os dados do pedido com os novos dados recebidos após a atualização
         // Esteja ciente de como os dados são retornados pela sua API
         const updatedOrder = action.payload;
-        const index = state.orders.findIndex(order => order.id === updatedOrder.id);
+        const index = state.orders.findIndex((order) => order.id === updatedOrder.id);
         if (index !== -1) {
           state.orders[index] = updatedOrder;
         }
