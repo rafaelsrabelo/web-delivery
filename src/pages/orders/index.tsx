@@ -3,7 +3,6 @@ import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
 import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
-import { toast } from 'react-toastify';
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -17,14 +16,16 @@ const translateStatus = (status) => {
 
 const getStatusColorClass = (status) => {
   const colorMap = {
-    opened: 'gray',
-    done: 'green',
-    canceled: 'red',
+    opened: 'blue',
+    done: 'blue',
+    canceled: 'blue',
     progress: 'blue',
   };
 
   const color = colorMap[status] || 'gray';
-  return `bg-${color}-100 text-${color}-800`;
+  const classes = `bg-${color}-100 text-${color}-800`;
+  console.log(`Status: ${status}, Classes: ${classes}`);
+  return classes;
 };
 
 const formatDate = (inputDate) => {
@@ -47,10 +48,8 @@ export function Orders() {
     title: '',
     description: '',
     orderId: null,
-    selectedStatus: 'opened', // Inicialize com um valor padrão, se necessário
+    selectedStatus: '',
   });
-  const isStatusDisabled = (status) => status === 'canceled' || status === 'done';
-
   const orderState = useSelector((state) => state.order);
 
   const dispatch = useDispatch();
@@ -61,40 +60,31 @@ export function Orders() {
     dispatch(fetchOrders(filterStatus));
   }, [filterStatus]);
 
-  useEffect(() => {
-    return () => {
-      if (modalData.orderId) {
-        dispatch(updateOrderStatus({ orderId: modalData.orderId, status: modalData.selectedStatus }));
-      }
-    };
-  }, [modalData.orderId, modalData.selectedStatus]);
-
   const handleOrder = (order) => {
     setSelectedOrderId(order.id);
     setModalData({
       title: 'Alterar Status do Pedido',
       description: `Qual é o próximo status para o pedido de ${order.customer}?`,
       orderId: order.id,
-      selectedStatus: modalData.selectedStatus || 'opened', // Keep the current selected status or default to 'opened'
+      selectedStatus: '', // Inicialize selectedStatus
     });
     setOpen(true);
   };
 
   const handleUpdateStatus = async () => {
     try {
-      if (!modalData || !modalData.orderId) {
+      if (!modalData || !modalData.orderId || !modalData.selectedStatus) {
+        console.error('Selecione um novo status antes de atualizar ou houve um problema com os dados.');
         return;
       }
 
       await dispatch(updateOrderStatus({ orderId: modalData.orderId, status: modalData.selectedStatus }));
 
-      await dispatch(fetchOrders(filterStatus));
-
       setOpen(false);
-      toast.success('Status atualizado!');
     } catch (error) {
       console.error('Erro ao atualizar o status:', error.message);
 
+      // Adicionar tratamento específico para diferentes tipos de erro, se necessário
       if (error.response) {
         console.error('Erro na API:', error.response.data);
       } else {
@@ -155,9 +145,11 @@ export function Orders() {
                   </td>
                   <td className="p-2 border-b">
                     <button
-                      className={`text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600`}
+                      className={`text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600 ${
+                        !['opened', 'progress'].includes(order.status) ? 'cursor-not-allowed opacity-50' : ''
+                      }`}
                       onClick={() => handleOrder(order)}
-                      disabled={isStatusDisabled(order.status)}
+                      disabled={!['opened', 'progress'].includes(order.status)}
                     >
                       Prosseguir
                     </button>
