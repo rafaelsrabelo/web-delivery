@@ -69,12 +69,10 @@ export function Orders() {
   }, [filterStatus, searchTerm, orderState.currentPage]);
 
   useEffect(() => {
-    // Adicione um pequeno atraso para evitar chamadas desnecessárias
     const delayTimer = setTimeout(() => {
       dispatch(fetchOrders({ status: filterStatus, page: orderState.currentPage, searchTerm }));
-    }, 300); // Ajuste o tempo conforme necessário (300 ms é um exemplo)
+    }, 300);
 
-    // Limpe o timer anterior em cada alteração do termo de busca
     return () => clearTimeout(delayTimer);
   }, [filterStatus, orderState.currentPage, searchTerm, dispatch]);
 
@@ -134,13 +132,6 @@ export function Orders() {
       <div className="flex items-center">
         <h1 className="text-2xl font-bold mb-4">Delliv - Rastreio Fácil</h1>
         <div className="flex items-center ml-auto">
-          {/* <button
-            className="ml-2 py-1 px-2 mr-2 text-sm bg-blue-500 hover:bg-blue-600 text-white rounded-md flex items-center"
-            onClick={updateTable}
-          >
-            <RefreshCcw size={14} className="mr-1" />
-            Atualizar
-          </button> */}
           <div className="flex w-full items-center gap-2 mx-1 rounded-lg border border-zinc-300 px-2 py-1 shadow-sm">
             <Search className="h-4 w-4 text-zinc-500" />
             <input
@@ -251,7 +242,7 @@ export function Orders() {
           </div>
         </div>
       ) : (
-        <>Não há pedidos com esse status</>
+        <>Não encontrado</>
       )}
     </LayoutApp>
   );
