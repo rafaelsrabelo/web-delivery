@@ -1,17 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
-import { fetchOrders } from '../../features/orderSlice';
+import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
-
-interface OrderProps {
-  id: number;
-  customer: string;
-  address: string;
-  user?: { name: string };
-  created_at: string;
-  status: 'opened' | 'done' | 'canceled' | 'progress';
-}
+import { toast } from 'react-toastify';
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -32,7 +24,7 @@ const getStatusColorClass = (status) => {
   };
 
   const color = colorMap[status] || 'gray';
-  return `bg-${color}-100`;
+  return `bg-${color}-100 text-${color}-800`;
 };
 
 const formatDate = (inputDate) => {
@@ -51,6 +43,13 @@ export function Orders() {
   const [filterStatus, setFilterStatus] = useState('');
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [open, setOpen] = useState(false);
+  const [modalData, setModalData] = useState({
+    title: '',
+    description: '',
+    orderId: null,
+    selectedStatus: 'opened', // Inicialize com um valor padrão, se necessário
+  });
+  const isStatusDisabled = (status) => status === 'canceled' || status === 'done';
 
   const orderState = useSelector((state) => state.order);
 
@@ -59,15 +58,50 @@ export function Orders() {
   const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
 
   useEffect(() => {
-    console.log('Filter Status:', filterStatus);
     dispatch(fetchOrders(filterStatus));
   }, [filterStatus]);
 
-  function handleOrder(order: OrderProps) {
+  useEffect(() => {
+    return () => {
+      if (modalData.orderId) {
+        dispatch(updateOrderStatus({ orderId: modalData.orderId, status: modalData.selectedStatus }));
+      }
+    };
+  }, [modalData.orderId, modalData.selectedStatus]);
+
+  const handleOrder = (order) => {
     setSelectedOrderId(order.id);
-    console.log('Order ID:', order.id);
-    console.log('Customer Name:', order.customer);
-  }
+    setModalData({
+      title: 'Alterar Status do Pedido',
+      description: `Qual é o próximo status para o pedido de ${order.customer}?`,
+      orderId: order.id,
+      selectedStatus: modalData.selectedStatus || 'opened', // Keep the current selected status or default to 'opened'
+    });
+    setOpen(true);
+  };
+
+  const handleUpdateStatus = async () => {
+    try {
+      if (!modalData || !modalData.orderId) {
+        return;
+      }
+
+      await dispatch(updateOrderStatus({ orderId: modalData.orderId, status: modalData.selectedStatus }));
+
+      await dispatch(fetchOrders(filterStatus));
+
+      setOpen(false);
+      toast.success('Status atualizado!');
+    } catch (error) {
+      console.error('Erro ao atualizar o status:', error.message);
+
+      if (error.response) {
+        console.error('Erro na API:', error.response.data);
+      } else {
+        console.error('Erro desconhecido:', error);
+      }
+    }
+  };
 
   return (
     <LayoutApp>
@@ -121,18 +155,32 @@ export function Orders() {
                   </td>
                   <td className="p-2 border-b">
                     <button
-                      className="text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600"
-                      onClick={() => setOpen(true)}
+                      className={`text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600`}
+                      onClick={() => handleOrder(order)}
+                      disabled={isStatusDisabled(order.status)}
                     >
                       Prosseguir
                     </button>
                     <Modal open={open} onClose={() => setOpen(false)}>
-                      <div className="flex flex-col gap-4"></div>
-                      <h1 className="text-2xl">Título do Modal</h1>
-                      <p>
-                        Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore ipsum Lore
-                        ipsum Lore ipsum Lore ipsum
-                      </p>
+                      <div className="flex flex-col gap-4">
+                        <h1 className="text-2xl">{modalData.title}</h1>
+                        <p>{modalData.description}</p>
+                        <select
+                          value={modalData.selectedStatus}
+                          onChange={(e) => setModalData({ ...modalData, selectedStatus: e.target.value })}
+                        >
+                          <option value="opened">Aberto</option>
+                          <option value="done">Finalizado</option>
+                          <option value="canceled">Cancelado</option>
+                          <option value="progress">Andamento</option>
+                        </select>
+                        <button
+                          className="bg-blue-500 rounded-md px-2 py-1 text-white hover:bg-blue-600"
+                          onClick={() => handleUpdateStatus(modalData.selectedStatus)}
+                        >
+                          Atualizar Status
+                        </button>
+                      </div>
                     </Modal>
                   </td>
                 </tr>
