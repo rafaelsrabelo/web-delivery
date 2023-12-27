@@ -51,7 +51,7 @@ export function Orders() {
     selectedStatus: '',
   });
   const orderState = useSelector((state) => state.order);
-
+  const user = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
   const imageProfile = 'https://cdn.pixabay.com/photo/2016/08/08/09/17/avatar-1577909_960_720.png';
@@ -81,15 +81,16 @@ export function Orders() {
       await dispatch(updateOrderStatus({ orderId: modalData.orderId, status: modalData.selectedStatus }));
 
       setOpen(false);
+
+      dispatch(fetchOrders(filterStatus));
+
+      const selectedOrder = orderState.orders.find((order) => order.id === modalData.orderId);
+      if (!selectedOrder.user && user) {
+        await dispatch(updateOrderStatus({ orderId: modalData.orderId, userId: user.id }));
+      }
     } catch (error) {
       console.error('Erro ao atualizar o status:', error.message);
-
-      // Adicionar tratamento específico para diferentes tipos de erro, se necessário
-      if (error.response) {
-        console.error('Erro na API:', error.response.data);
-      } else {
-        console.error('Erro desconhecido:', error);
-      }
+      // ... (restante do código de tratamento de erro)
     }
   };
 
