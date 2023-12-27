@@ -3,6 +3,7 @@ import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
 import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
+import { toast } from 'react-toastify';
 
 const translateStatus = (status) => {
   const statusMap = {
@@ -33,11 +34,17 @@ const formatDate = (inputDate) => {
   const day = date.getDate();
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
+  const hours = date.getHours();
+  const minutes = date.getMinutes();
+  const seconds = date.getSeconds();
 
   const formattedDay = String(day).padStart(2, '0');
   const formattedMonth = String(month).padStart(2, '0');
+  const formattedHours = String(hours).padStart(2, '0');
+  const formattedMinutes = String(minutes).padStart(2, '0');
+  const formattedSeconds = String(seconds).padStart(2, '0');
 
-  return `${formattedDay}/${formattedMonth}/${year}`;
+  return `${formattedDay}/${formattedMonth}/${year} - ${formattedHours}:${formattedMinutes}`;
 };
 
 export function Orders() {
@@ -88,6 +95,7 @@ export function Orders() {
       if (!selectedOrder.user && user) {
         await dispatch(updateOrderStatus({ orderId: modalData.orderId, userId: user.id }));
       }
+      toast.success('Status atualizado com sucesso');
     } catch (error) {
       console.error('Erro ao atualizar o status:', error.message);
       // ... (restante do código de tratamento de erro)
@@ -182,7 +190,7 @@ export function Orders() {
           </table>
         </div>
       ) : (
-        <>No orders available.</>
+        <>Não há pedidos com esse status</>
       )}
     </LayoutApp>
   );
