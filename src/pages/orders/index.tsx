@@ -1,11 +1,10 @@
-import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { LayoutApp } from '../../template/App';
 import { useEffect, useState } from 'react';
 import { fetchOrders, updateOrderStatus } from '../../features/orderSlice';
 import { Modal } from '../../components/shared/Modal';
 import { toast } from 'react-toastify';
-import { RefreshCcw, Search } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 const translateStatus = (status) => {
   const statusMap = {

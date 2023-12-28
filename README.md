@@ -1,30 +1,31 @@
-# React + TypeScript + Vite
+<h1 style="text-align: center; font-weight: bold;">Delliv Web</h1>
+<br>
+<br>
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Sobre o Projeto
 
-Currently, two official plugins are available:
+O Delliv Web é um frontend desenvolvido para proporcionar uma experiência intuitiva e segura aos usuários, permitindo o rastreamento avançado de entregas. Integrando-se ao Delliv API, o frontend utiliza o padrão RESTful e implementa autenticação com JWT (JSON Web Token) para garantir a segurança das operações.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Tecnologias Usadas
 
-## Expanding the ESLint configuration
+- [React]: Um framework Node.js progressivo para construir aplicativos eficientes e escaláveis.
+- [Redux + Toolkit]: Um ORM (Object-Relational Mapping) moderno e robusto para interagir com o banco de dados.
+- [TypeScript]: Uma linguagem de programação que adiciona tipos ao JavaScript, proporcionando mais robustez e autocompletar durante o desenvolvimento.
+- [Redux + Toolkit]: Gerenciamento de estado eficiente para aplicações React, proporcionando uma arquitetura previsível e facilitando a manipulação do estado da aplicação.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+### Funcionalidades Principais
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+- **Rastreamento de Entregas**: Visualize uma lista de pedidos e atualize o status de cada entrega.
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+### Como rodar a aplicação
+
+```bash
+# Clone este repositório
+$ git clone https://github.com/rafaelsrabelo/web-delliv
+# Acesse a pasta do projeto
+$ cd web-delliv
+# Instale as dependências
+$ npm install
+# Execute a aplicação em modo de desenvolvimento
+$ npm run dev
