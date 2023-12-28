@@ -9,7 +9,6 @@ O Delliv Web é um frontend desenvolvido para proporcionar uma experiência intu
 ### Tecnologias Usadas
 
 - [React]: Um framework Node.js progressivo para construir aplicativos eficientes e escaláveis.
-- [Redux + Toolkit]: Um ORM (Object-Relational Mapping) moderno e robusto para interagir com o banco de dados.
 - [TypeScript]: Uma linguagem de programação que adiciona tipos ao JavaScript, proporcionando mais robustez e autocompletar durante o desenvolvimento.
 - [Redux + Toolkit]: Gerenciamento de estado eficiente para aplicações React, proporcionando uma arquitetura previsível e facilitando a manipulação do estado da aplicação.
 
