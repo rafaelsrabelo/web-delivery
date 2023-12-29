@@ -16,19 +16,6 @@ const translateStatus = (status) => {
   return statusMap[status] || status;
 };
 
-const getStatusColorClass = (status) => {
-  const colorMap = {
-    opened: 'blue',
-    done: 'green',
-    canceled: 'red',
-    progress: 'blue',
-  };
-
-  const color = colorMap[status] || 'gray';
-  const classes = `bg-${color}-100 text-${color}-800`;
-  return classes;
-};
-
 const formatDate = (inputDate) => {
   const date = new Date(inputDate);
   const day = date.getDate();
@@ -36,7 +23,6 @@ const formatDate = (inputDate) => {
   const year = date.getFullYear();
   const hours = date.getHours();
   const minutes = date.getMinutes();
-  const seconds = date.getSeconds();
 
   const formattedDay = String(day).padStart(2, '0');
   const formattedMonth = String(month).padStart(2, '0');
@@ -181,11 +167,22 @@ export function Orders() {
                   <td className="p-2 border-b text-xs">{formatDate(order.created_at)}</td>
                   <td className="p-2 border-b text-xs">
                     <span
-                      className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${getStatusColorClass(order.status)}`}
+                      className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${
+                        order.status === 'opened'
+                          ? 'bg-blue-100'
+                          : order.status === 'done'
+                            ? 'bg-green-100'
+                            : order.status === 'canceled'
+                              ? 'bg-red-100'
+                              : order.status === 'progress'
+                                ? 'bg-blue-100'
+                                : 'bg-gray-100'
+                      }`}
                     >
                       {translateStatus(order.status)}
                     </span>
                   </td>
+
                   <td className="p-2 border-b">
                     <button
                       className={`text-xs bg-blue-500 text-white rounded-md px-2 py-1 hover:bg-blue-600 ${
