@@ -4,6 +4,7 @@ import { LayoutAuth } from '../../template/Auth';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../../features/userSlice';
+import { toast } from 'react-toastify';
 
 export function SignIn() {
   const [email, setEmail] = useState('');
@@ -24,17 +25,20 @@ export function SignIn() {
 
     try {
       const result = await dispatch(loginUser(userCredential));
-      
+
       if (loginUser.fulfilled.match(result)) {
         const user = result.payload; // Obtenha o usuário do resultado da ação
         localStorage.setItem('user', JSON.stringify(user));
         setEmail('');
         setPassword('');
         navigate('/');
+        toast.success(`Bem vindo ${user.name}`);
       } else {
-        console.error('Erro ao fazer login:', result.error.message);
+        toast.error('Erro ao fazer login:');
       }
     } catch (error) {
+      toast.error('Erro ao fazer login:');
+
       console.error('Erro ao fazer login:', error.message);
     }
   };
@@ -54,12 +58,14 @@ export function SignIn() {
           value={password}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
         />
-        <button
-          className="bg-blue-500 w-full h-12 font-bold text-white p-2.5 rounded-lg mt-4 transition duration-300 hover:bg-blue-600"
-        >
+        <button className="bg-blue-500 w-full h-12 font-bold text-white p-2.5 rounded-lg mt-4 transition duration-300 hover:bg-blue-600">
           {loading ? 'Entrando...' : 'Entrar'}
         </button>
-        {error && (<div className="mt-2 text-red-700" role='alert'>{error}</div>)}
+        {error && (
+          <div className="mt-2 text-red-700" role="alert">
+            {error}
+          </div>
+        )}
       </form>
       <span className="mt-4 block text-sm text-gray-600">
         Não possui uma conta?{' '}
