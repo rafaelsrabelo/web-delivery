@@ -169,7 +169,7 @@ export function Orders() {
                     <span
                       className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${
                         order.status === 'opened'
-                          ? 'bg-blue-100'
+                          ? 'bg-gray-100'
                           : order.status === 'done'
                             ? 'bg-green-100'
                             : order.status === 'canceled'
