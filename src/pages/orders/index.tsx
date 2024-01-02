@@ -167,16 +167,16 @@ export function Orders() {
                   <td className="p-2 border-b text-xs">{formatDate(order.created_at)}</td>
                   <td className="p-2 border-b text-xs">
                     <span
-                      className={`font-medium rounded-full text-xs px-2.5 py-0.5 ${
+                      className={`font-medium rounded-full text-zinc-700 text-xs px-2.5 py-0.5 ${
                         order.status === 'opened'
-                          ? 'bg-gray-100'
+                          ? 'bg-gray-300'
                           : order.status === 'done'
-                            ? 'bg-green-100'
+                            ? 'bg-green-300'
                             : order.status === 'canceled'
-                              ? 'bg-red-100'
+                              ? 'bg-red-300'
                               : order.status === 'progress'
-                                ? 'bg-blue-100'
-                                : 'bg-gray-100'
+                                ? 'bg-blue-300'
+                                : 'bg-gray-300'
                       }`}
                     >
                       {translateStatus(order.status)}
