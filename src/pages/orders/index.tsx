@@ -144,15 +144,15 @@ export function Orders() {
       {!orderState.loading && orderState.error ? <>Error: {orderState.error}</> : null}
       {!orderState.loading && filteredOrders.length ? (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 text-center">
+          <table className="min-w-full bg-white border border-gray-200 text-start">
             <thead>
               <tr>
-                <th className="p-2 border-b text-xs">Cliente</th>
-                <th className="p-2 border-b text-xs">Endereço</th>
-                <th className="p-2 border-b text-xs">Entregador</th>
-                <th className="p-2 border-b text-xs">Pedido em</th>
-                <th className="p-2 border-b text-xs">Status</th>
-                <th className="p-2 border-b text-xs">-</th>
+                <th className="p-2 border-b text-xs text-start">Cliente</th>
+                <th className="p-2 border-b text-xs text-start">Endereço</th>
+                <th className="p-2 border-b text-xs text-start">Entregador</th>
+                <th className="p-2 border-b text-xs text-start">Pedido em</th>
+                <th className="p-2 border-b text-xs text-start">Status</th>
+                <th className="p-2 border-b text-xs text-start">-</th>
               </tr>
             </thead>
             <tbody>
