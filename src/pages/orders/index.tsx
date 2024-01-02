@@ -141,7 +141,7 @@ export function Orders() {
         </div>
       </div>
       {orderState.loading && <>Loading...</>}
-      {!orderState.loading && orderState.error ? <>Error: {orderState.error}</> : null}
+      {/* {!orderState.loading && orderState.error ? <>Error: {orderState.error}</> : null} */}
       {!orderState.loading && filteredOrders.length ? (
         <div className="overflow-x-auto">
           <table className="min-w-full bg-white border border-gray-200 text-start">
