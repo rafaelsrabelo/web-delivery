@@ -1,4 +1,4 @@
-<h1 style="text-align: center; font-weight: bold;">Delliv Web</h1>
+<h1 style="text-align: center; font-weight: bold;">Delivery Web</h1>
 <br>
 <br>
 
@@ -21,9 +21,9 @@ O Delivery web é um frontend desenvolvido para proporcionar uma experiência in
 
 ```bash
 # Clone este repositório
-$ git clone https://github.com/rafaelsrabelo/web-delliv
+$ git clone https://github.com/rafaelsrabelo/web-delivery
 # Acesse a pasta do projeto
-$ cd web-delliv
+$ cd web-delivery
 # Instale as dependências
 $ npm install
 # Execute a aplicação em modo de desenvolvimento
