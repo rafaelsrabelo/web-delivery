@@ -4,7 +4,7 @@
 
 ## Sobre o Projeto
 
-O Delliv Web é um frontend desenvolvido para proporcionar uma experiência intuitiva e segura aos usuários, permitindo o rastreamento avançado de entregas. Integrando-se ao Delliv API, o frontend utiliza o padrão RESTful e implementa autenticação com JWT (JSON Web Token) para garantir a segurança das operações.
+O Delivery web é um frontend desenvolvido para proporcionar uma experiência intuitiva e segura aos usuários, permitindo o rastreamento avançado de entregas. Integrando-se ao Delivery API, o frontend utiliza o padrão RESTful e implementa autenticação com JWT (JSON Web Token) para garantir a segurança das operações.
 
 ### Tecnologias Usadas
 
